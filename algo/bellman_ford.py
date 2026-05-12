@@ -4,7 +4,7 @@ def get_path_string(graph, previous, start, target, distances):
     a(0) -(2)-> b(2) -(1)-> e(3)
     """
 
-    if distances[target] == float('inf'):
+    if distances[target] == float("inf"):
         return f"{target}: Unreachable"
 
     path = []
@@ -31,9 +31,7 @@ def get_path_string(graph, previous, start, target, distances):
             prev_node = path[i - 1]
             weight = graph[prev_node][node]
 
-            result.append(
-                f"-({weight})-> {node}({dist_at_node})"
-            )
+            result.append(f"-({weight})-> {node}({dist_at_node})")
 
     return " ".join(result)
 
@@ -49,35 +47,22 @@ def has_negative_edge(graph):
     return False
 
 
-def bellman_ford(
-    graph,
-    start,
-    return_trace=False,
-    verbose=True
-):
+def bellman_ford(graph, start, return_trace=False, verbose=True):
 
     # =========================================================
     # Validate start node
     # =========================================================
 
     if start not in graph:
-        raise ValueError(
-            f"Start node {start!r} is not in the graph."
-        )
+        raise ValueError(f"Start node {start!r} is not in the graph.")
 
     # =========================================================
     # Initialize
     # =========================================================
 
-    distances = {
-        node: float('inf')
-        for node in graph
-    }
+    distances = {node: float("inf") for node in graph}
 
-    previous = {
-        node: None
-        for node in graph
-    }
+    previous = {node: None for node in graph}
 
     distances[start] = 0
 
@@ -91,11 +76,13 @@ def bellman_ford(
 
     if return_trace:
 
-        trace.append({
-            "iteration": 0,
-            "distances": distances.copy(),
-            "updated": {start},
-        })
+        trace.append(
+            {
+                "iteration": 0,
+                "distances": distances.copy(),
+                "updated": {start},
+            }
+        )
 
     # =========================================================
     # Print max iterations
@@ -107,13 +94,9 @@ def bellman_ford(
         print("BELLMAN-FORD ALGORITHM")
         print("=" * 60)
 
-        print(
-            f"Total vertices = {len(vertices)}"
-        )
+        print(f"Total vertices = {len(vertices)}")
 
-        print(
-            f"Maximum iterations = V - 1 = {len(vertices)} - 1 = {len(vertices) - 1}"
-        )
+        print(f"Maximum iterations = V - 1 = {len(vertices)} - 1 = {len(vertices) - 1}")
 
         # -----------------------------------------------------
         # Important theorem
@@ -121,13 +104,9 @@ def bellman_ford(
 
         if not has_negative_edge(graph):
 
-            print(
-                "\nGraph has NO negative edges."
-            )
+            print("\nGraph has NO negative edges.")
 
-            print(
-                "=> Negative cycle is impossible."
-            )
+            print("=> Negative cycle is impossible.")
 
     # =========================================================
     # Relax edges V-1 times
@@ -152,17 +131,13 @@ def bellman_ford(
                 # Skip unreachable source
                 # ------------------------------------------------
 
-                if distances[u] == float('inf'):
+                if distances[u] == float("inf"):
                     continue
 
                 old_distance = distances[v]
                 new_distance = distances[u] + weight
 
-                old_str = (
-                    "inf"
-                    if old_distance == float('inf')
-                    else str(old_distance)
-                )
+                old_str = "inf" if old_distance == float("inf") else str(old_distance)
 
                 # ------------------------------------------------
                 # Relaxation display
@@ -175,7 +150,7 @@ def bellman_ford(
                         f"{u}({distances[u]}) "
                         f"-({weight})-> {v} : "
                         f"min({new_distance}, {old_str})",
-                        end=""
+                        end="",
                     )
 
                 # ------------------------------------------------
@@ -204,11 +179,13 @@ def bellman_ford(
 
         if return_trace:
 
-            trace.append({
-                "iteration": iteration,
-                "distances": distances.copy(),
-                "updated": updated_nodes,
-            })
+            trace.append(
+                {
+                    "iteration": iteration,
+                    "distances": distances.copy(),
+                    "updated": updated_nodes,
+                }
+            )
 
         # =====================================================
         # Early stopping
@@ -220,13 +197,9 @@ def bellman_ford(
 
                 print("\nNo updates in this iteration.")
 
-                print(
-                    "=> Algorithm converged early."
-                )
+                print("=> Algorithm converged early.")
 
-                print(
-                    "=> Stop before reaching V-1 iterations."
-                )
+                print(f"=> Stop before reaching {iteration} iterations.")
 
             break
 
@@ -240,10 +213,7 @@ def bellman_ford(
 
         for v, weight in graph[u].items():
 
-            if (
-                distances[u] != float('inf')
-                and distances[u] + weight < distances[v]
-            ):
+            if distances[u] != float("inf") and distances[u] + weight < distances[v]:
 
                 negative_cycle = True
 
@@ -269,17 +239,9 @@ def bellman_ford(
             if node == start:
                 continue
 
-            path_str = get_path_string(
-                graph,
-                previous,
-                start,
-                node,
-                distances
-            )
+            path_str = get_path_string(graph, previous, start, node, distances)
 
-            print(
-                f"{start} -> {node}: {path_str}"
-            )
+            print(f"{start} -> {node}: {path_str}")
 
     # =========================================================
     # Return
@@ -287,11 +249,6 @@ def bellman_ford(
 
     if return_trace:
 
-        return (
-            distances,
-            previous,
-            negative_cycle,
-            trace
-        )
+        return (distances, previous, negative_cycle, trace)
 
     return distances, previous, negative_cycle
